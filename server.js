@@ -6,7 +6,7 @@ import log from './logger/logger.js';
 
 
 const app = express();
-const PORT = 5000;
+const PORT = 5009;
 
 let staticPath = path.join(path.resolve(), 'public');
 
