@@ -5,6 +5,8 @@ const ageInput = document.getElementById('age');
 const addButton = document.getElementById('addButton');
 const usersList = document.getElementById('usersList');
 
+let rowNumber = 1;
+
 //mock data
 const usersFromData = [
     {
@@ -71,7 +73,7 @@ class UI {
 
         const row = document.createElement('tr');
         row.innerHTML = `
-        <th scope="row">1</th>
+        <th scope="row">${rowNumber}</th>
             <td>${user.firstName}</td>
             <td>${user.lastName}</td>
             <td>${user.age}</td>
@@ -79,6 +81,7 @@ class UI {
         `;
 
         usersList.appendChild(row);
+        rowNumber ++;
 
     }
 }
