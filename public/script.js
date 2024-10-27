@@ -215,6 +215,6 @@ document.addEventListener('DOMContentLoaded', UI.displayUsers);
 // event to add user to DB , and get list of all users, and find specific user, create user as an Object and display specific user in the table
 document.getElementById("form-user")
     .addEventListener('submit', async (event) => {
-        event.preventDefault();
+        //event.preventDefault();
         await UI.createUser();
     })
