@@ -207,7 +207,6 @@ class UI {
         }
 
     }
-
 }
 
 class AppService {
