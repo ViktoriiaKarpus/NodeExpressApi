@@ -47,8 +47,8 @@ class User {
 class UI {
     static async displayAppName() {
         try {
-            appName.innerText = await AppService.getAppName();
-        } catch (error) {
+            appName.innerText =  await AppService.getAppName();
+        } catch(error) {
             console.error('Error while catching app name: ', error);
             throw error;
         }
@@ -70,11 +70,11 @@ class UI {
         addButton.disabled = !isValid;
     }
 
-    static async displayUsers() {
+    static async  displayUsers() {
         // const users = storedUsers //Mock data;
         const users = await UserService.getUsers() || []; //API call GET users;
 
-        if (typeof users !== 'string' && users.length) {
+        if(typeof users !== 'string' && users.length) {
             users.forEach((user) => {
                 console.log('user = ', user);
                 UI.addUserToList(user);
@@ -83,7 +83,7 @@ class UI {
     }
 
     static async createUser() {
-        if (UI.isFormValid()) {
+        if(UI.isFormValid()) {
             const firstName = firstNameInput.value.trim();
             const lastName = lastNameInput.value.trim();
             const age = ageInput.value;
@@ -100,7 +100,7 @@ class UI {
             let newUser = {};
 
             users.forEach((user) => {
-                if (user.firstName === firstName
+                if(user.firstName === firstName
                     && user.lastName === lastName
                     && user.age === age
                 ) {
@@ -124,10 +124,29 @@ class UI {
             <td>${user.lastName}</td>
             <td>${user.age}</td>
             <td>${user.id}</td>
+            <td>
+                <i class="icon" id="editIcon">
+                    <a href="/edit">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                            <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
+                        </svg>
+                    </a>
+                </i>
+            </td>
+            <td>
+                <i class="icon" id="deleteIcon">
+                    <a href="/delete">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                        </svg>
+                    </a>
+                </i>
+            </td>
         `;
 
         usersList.appendChild(row);
-        rowNumber++;
+        rowNumber ++;
     }
 
     static getSearchCriteria() {
@@ -136,7 +155,7 @@ class UI {
         const lastNameValue = lastNameInput.value.trim().length > 0 ? lastNameInput.value.trim() : '';
         const ageValue = ageInput.value.trim().length > 0 ? ageInput.value.trim() : -1;
 
-        if (userIdValue.length || firstNameValue.length || lastNameValue.length || ageValue !== -1) {
+        if(userIdValue.length || firstNameValue.length || lastNameValue.length || ageValue !== -1) {
             return {
                 'userId': userIdValue,
                 'firstName': firstNameValue,
@@ -156,16 +175,15 @@ class UI {
         const searchCriteria = UI.getSearchCriteria();
         console.log("searchCriteria", searchCriteria);
 
-        if (UI.isSearchCriteriaValid(searchCriteria)) {
+        if(UI.isSearchCriteriaValid(searchCriteria)) {
             searchButton.disabled = false;
         }
     }
 
     static preventSearchUrl() {
-        if (window.location.pathname === '/search?') {
+        if(window.location.pathname === '/search?') {
             window.history.pushState({}, '', '/search');
         }
-
     }
 
     static async searchUsers() {
@@ -204,8 +222,26 @@ class UI {
                 })
             }
 
+
+
+
         }
 
+    }
+
+    static getRowText(event) {
+        const userRow = event.target.closest('tr');
+
+        let userInfo = [];
+
+        if(userRow) {
+            const userCells = userRow.cells;
+            for(let i = 1; i < 5; i++) {
+                userInfo[i-1] = userCells[i].textContent.trim();
+            }
+        }
+
+        return userInfo;
     }
 
 }
@@ -239,7 +275,7 @@ class UserService {
                 //if response.code === 200,  we have 2 ways
                 const contentType = response.headers.get('Content-Type');
 
-                if (contentType.includes('text/html')) {
+                if(contentType.includes('text/html')) {
                     //1. "There are no users."
                     //      if Content-Type = 'text/html'
                     return response.text();
@@ -310,7 +346,7 @@ document.addEventListener('DOMContentLoaded', UI.displayAppName);
 document.addEventListener('DOMContentLoaded', UI.displayUsers);
 
 //we are on tab Add
-if (formAdd !== null) {
+if(formAdd !== null) {
     //event to activate Add button
     formAdd.addEventListener('input', UI.activateAddButton);
 
@@ -331,13 +367,12 @@ if (formAdd !== null) {
 
 
 //we are on tab Search
-if (formSearch !== null) {
+if(formSearch !== null) {
     formSearch.addEventListener('input', UI.activateSearchButton);
 
     formSearch.addEventListener('submit', async (event) => {
         event.preventDefault();
         UI.preventSearchUrl();
-
 
         await UI.searchUsers();
 
@@ -345,6 +380,17 @@ if (formSearch !== null) {
         searchButton.disabled = true;
     })
 }
+
+//we are on any tab
+usersList.addEventListener('click', (event) => {
+    console.log(event.target);
+    if(event.target.classList.contains('bi-pen') || event.target.classList.contains('bi-trash')) {
+        const userInfo = UI.getRowText(event);
+        const copiedUser = new User(userInfo[0], userInfo[1], userInfo[2], userInfo[3]);
+
+        console.log("copiedUser = ", copiedUser);
+    }
+})
 
 
 

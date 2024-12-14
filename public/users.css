@@ -7,10 +7,27 @@ h2 {
 }
 
 .container {
-    margin-top: 50px;
+    margin-top: 20px;
     width: 50% !important;
-
 }
+
 .form-group {
     margin: 20px;
+}
+
+.icon {
+    cursor: pointer;
+}
+
+.icon a {
+    color: black;
+    text-decoration: none;
+}
+
+#editIcon a:hover {
+    color: darkcyan;
+}
+
+#deleteIcon a:hover {
+    color: red;
 }
